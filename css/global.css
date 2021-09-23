@@ -1,0 +1,397 @@
+.main .navbar-default{
+    background: none !important;
+    border:none !important;
+}
+body, html{
+   background-image: url('../images/bg.jpg');
+   background-repeat: no-repeat;
+   background-size: 100% 100%;
+    font-family: Arial;
+    color:#000;
+}
+
+.navbar-nav {
+    float: left;
+    margin: 0;
+     margin-top: 73px; 
+}
+
+.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus, .navbar-default .navbar-nav>.active>a:hover {
+    background: none;
+}
+.navbar-brand>img {
+    display: block;
+    position: relative;
+    z-index: 9999;
+}
+.navbar-default .navbar-nav>.active>a , .navbar-default .navbar-nav>li>a{
+    color:#000 !important;
+    font-size: 18px;
+}
+.align-menu-pading{
+    padding-right: 15px;
+}
+.menu-boder{
+ border-bottom: #b1722d solid 5px;
+}
+.music{
+    font-size: 18px;
+    font-weight: bold;
+    padding-top:10px;
+    padding-bottom:15px;
+    letter-spacing: 1px;
+}
+.artists{
+    /* background: #fff; */
+}
+.main .navbar {
+    margin-bottom: 0px !important;
+    height: 175px;
+}
+.null-padding{
+    padding:0px!important;
+}
+.title{
+    padding:2px 10px;
+    background: #fff;
+    margin-left: 9px;
+}
+.d-container{
+    border-left: #c09666 solid 0px; 
+    height: 400px;
+    overflow-y: scroll; 
+     margin-left: 9px;
+}
+
+.grey-border{
+    width: 50%;
+    height: 10px;
+    background: #7d7d7d;
+}
+.grey-white{
+    width: 50%;
+    height: 10px;
+    background: #fff;
+}
+.black-border{
+    width: 100%;
+    height: 10px;
+    background: #352319;   
+}
+.content{
+    padding: 6px;
+    background: #d0b698;
+    /*height: 1000px;*/
+
+}
+
+.home-grid{
+    position: relative;
+}
+.social{
+    position: absolute;
+    left:70%;
+    bottom:5px;
+}
+.t-title-border{
+    border-top: #b2712d solid 5px; 
+}
+.t-title-border{
+    background: #d0b698;
+    padding-left:25px;
+}
+.t-title{
+    font-weight: bold;
+    font-size: 20px;
+    position: relative;
+    top:-13px;
+}
+.testimonials ul{
+    padding: 0px;
+    margin: 0px;
+}
+.testimonials ul li{
+    list-style: none;
+    margin:15px;
+}
+.testimonials ul li span{
+    font-weight: bold;
+}
+.a-social{
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+}
+.a-social img{
+    margin-top:10px;
+}
+.artist-content{
+    padding: 0% 10%  60px 10%;
+    font-weight: bold;
+}
+.c-submit-btn{
+    background-image: url('../images/submit-btn.png');
+    width: 74px;
+    height: 29px;
+    border:none;
+    text-align: right;
+}
+.bold-font{
+    font-weight: bold;
+}
+.contact-form{
+    /* background: #000; */
+    padding:15px;
+}
+.form-fields{
+    min-height: 200px;
+}
+.aboutimg{
+    width: 100%;
+}
+.abouttext{
+    position: relative;
+    top:-8px;
+}
+.artistbar{
+    background-image: url('../images/artist-bar.png');
+    background-repeat: no-repeat;
+    width: 100%;
+   /* height: 27px;*/
+    background-size: 100% 27px;
+}
+.a-title{
+    font-weight: bold;
+    font-size: 20px;
+    position: relative; 
+}
+.black-bar{
+    height: 5px;
+    background: #000;
+    position: relative;
+    top:11px;
+}
+.lion{
+    position: relative;
+    top:-30px;
+}
+.a-border-right{
+    border-right:#000 solid 5px;
+}
+.a-border-right ul{
+    padding: 0x;
+    margin: 0px;
+    min-height: 400px;
+}
+.a-border-right ul li{
+    list-style: none;
+    padding: 0x;
+    margin: 0px;
+}
+/*left border*/
+.a-border-left{
+    border-left:#000 solid 5px;
+}
+.a-border-left ul{
+    padding: 0x;
+    margin: 0px;
+    min-height: 400px;
+}
+
+
+
+@media screen and (max-width: 768px)
+{
+    .item-inner img
+    {
+        max-width: 100%;
+        max-height: 100%;
+        display:block;
+        margin-left: 15px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+  .main-body
+     { 
+        margin-top: 50px;
+		margin-bottom:50px;
+  }
+  
+}
+
+
+
+.a-border-left ul li{
+    list-style: none;
+    padding: 0x;
+    margin: 0px;
+}
+.press-release{
+    position: relative;
+    top:-30px;
+}
+.anchor a{
+    text-decoration: none;
+    color:#000;
+    display: block;
+    padding:5px 0px;
+}
+.text{
+    padding:2%;
+}
+.contactus a{
+    color:#000;
+}
+.innerImg-about{
+    margin-top:14px
+}
+
+/*div .container.mobilecenter
+{
+    margin-top: 150px;
+
+}*/
+/* 
+
+
+@media screen and (max-width: 600px) {
+  .abouttext
+     { 
+        margin-top: 50px;
+  }
+  
+} */
+
+/*@media screen(min-width: 768px)
+{
+    div .container.mobilecenter{
+        margin-top: 150px;
+    }
+}
+*/
+
+.space-medium{
+    height: 60px;
+}
+.artistbar-mobile{
+    display: none;
+}
+.artist-height{
+    height: 700px;overflow-y: auto;
+}
+@media (max-width:768px) {
+    .navbar-brand>img{
+        width:200px;
+    }
+    .navbar .pull-right{
+        float:left;
+        text-align: center;
+        width:100%;
+    }
+    .music{
+        padding-top:25px;
+    }
+    .navbar-default .navbar-toggle{
+        background: #b1722d;
+        border-color:#b1722d;
+        margin-top:18px;
+    }
+    .navbar-default .navbar-toggle:focus{
+        background: #b1722d;
+    }
+    .navbar-default .navbar-toggle .icon-bar{
+        background-color: #fff;
+    }
+    .navbar-default .navbar-collapse{
+        border-color:#b1722d;
+        z-index: 9999;
+        position: relative; 
+        background: #d0b698;
+    }
+    .navbar-nav{
+        margin-top:0px;
+    }
+    .nav>li{
+        text-align: left;
+    }
+    .main .navbar{
+        height: 95px;
+    }
+    .mobile-center{
+        text-align: center;
+        min-height: 115px;
+    }
+    .index-grid{
+        margin:10px 0px;
+    }
+    .index-grid .d-container, .index-grid .title{
+        margin-left:0px;
+    }
+    .facebook-grid{
+        width:325px;
+        margin:10px auto;
+    }
+    .innerImg-about{
+        width: 100%;
+        margin-top: 0px;
+    }
+    .abouttext{
+        margin-top: 20px
+    }
+    .lion{
+        display: none;
+    }
+    .music{
+        font-size: 16px;
+    }
+    .space-medium{
+        height: 30px;
+    }
+    .artistbar-mobile{
+        display: block;
+    }
+    .mobile-hide{
+        display: none;
+    }
+    .a-border-left{
+        border: none;
+    }
+    .artist-height{
+        height: auto;overflow-y: auto;
+        min-height: 100px;
+    }
+    
+
+    .add
+    {
+        margin-top: 15px;
+    }
+    
+    .a-border-left ul{
+        padding-left:0px;
+    }
+    .space-small{
+        padding-top:20px;
+    }
+    .press-release{
+        margin-top:20px;
+    }
+    .press-release .t-title-border{
+        display: none;
+    }
+    .press-release img{
+        width: 100%;
+    }
+    .artist-content{
+        padding:0px;
+    }
+    .artistbar{
+        background: none;
+    }
+    .artistbar .a-title{
+        border-bottom: #b1722d solid 2px;
+    }
+}
+
+
