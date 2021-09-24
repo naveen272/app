@@ -8,9 +8,9 @@
 # Config Variables:
 USER='root'
 HOST='localhost'
-PASS='Root@123'
+PASS='admin@123'
 export PATH=/bin:/usr/bin:/usr/local/bin
-DB_PATH='/root/mysqlbackups'
+DB_PATH='/var/www/html/backups'
 DATABASE_NAME='demo'
 TODAY=$(date +%Y%m%d)
 OUTFILE='output'
