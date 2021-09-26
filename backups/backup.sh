@@ -37,7 +37,7 @@ else
   exit 1
 fi
 
-path="/root/mysqlbackups"
+path="/var/www/html/backups"
 timestamp=$(date +%Y%m%d)    
 filename=log_$timestamp.txt    
 log=$OUTFILE_$TODAY.txt
