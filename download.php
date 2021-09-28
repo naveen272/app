@@ -33,7 +33,7 @@ $employee_arr = array();
 $file = fopen($filename,"w");
 
 // Header row - Remove this code if you don't want a header row in the export file.
-$employee_arr = array("S.No","name","date","amount","Created By"); 
+$employee_arr = array("S.No","name","date","amount","Created By","Documents"); 
 fputcsv($file,$employee_arr);  
 $i=1; 
 while($row = mysqli_fetch_assoc($result)){
@@ -41,9 +41,10 @@ while($row = mysqli_fetch_assoc($result)){
     $name = $row['name'];
     $date = $row['date'];
     $amount = $row['amount'];
-    $uname = $row['uname']; 
+    $uname = $row['uname'];
+    $files= $row['file_path'];
     // Write to file 
-    $employee_arr = array($id,$name,$date,$amount,$uname);
+    $employee_arr = array($id,$name,$date,$amount,$uname,$files);
     fputcsv($file,$employee_arr);  
     $i++; 
 }
