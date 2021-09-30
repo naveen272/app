@@ -112,13 +112,13 @@ div.desc {
 						//echo $valueTosearch;
                         if($_SESSION["role"] == "admin"){
 						$sql = "SELECT * FROM employees WHERE name LIKE '%$valueTosearch%' OR 
-                        amount  LIKE '%$valueTosearch%' OR uname LIKE '%$valueTosearch%' OR date LIKE '%$valueTosearch%'";
+                        amount  LIKE '%$valueTosearch%' OR uname LIKE '%$valueTosearch%' OR file_path LIKE '%$valueTosearch%' OR date LIKE '%$valueTosearch%'";
 					    //echo print_r($sql);
                     }else{
 						// Attempt select query execution
 						$sql = "SELECT * FROM employees where uname='".$_SESSION["username"]."' 
                         and name LIKE '%$valueTosearch%' OR uname='".$_SESSION["username"]."' 
-                        and amount LIKE '%$valueTosearch%' OR uname='".$_SESSION["username"]."' 
+                        and amount LIKE '%$valueTosearch%' OR file_path LIKE '%$valueTosearch%' OR uname='".$_SESSION["username"]."' 
                         and date LIKE '%$valueTosearch%'";
 					    //echo print_r($sql);
                     }
