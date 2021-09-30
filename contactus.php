@@ -26,7 +26,7 @@ if($mail){
     }
 $message = "<h3>Name:</h3>".$mailerName."<br><h3>Mail Id :</h3>".$usermail."<br><h3>Feedback :</h3>".$message1;
 
-	$mail->AddAddress("naveen.ch@softforceapps.com",$mailerName);
+	$mail->AddAddress("naveencheekati2@gmail.com",$mailerName);
 	$mail->SetFrom($usermail,"Hi Naveen"	);
 	$mail->Subject = "Feedback From viewer";
 	$mail->Body = $message;
