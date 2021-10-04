@@ -1,8 +1,0 @@
-information_schema demo mysql performance_schema sys
-moved  demo.sql to the backup folder successfully
-Backup:: Script Start -- 20210926
-Backup :: Script End -- 20210926
-information_schema demo mysql performance_schema sys
-moved  demo.sql to the backup folder successfully
-Backup:: Script Start -- 20210926
-Backup :: Script End -- 20210926
