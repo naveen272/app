@@ -8,3 +8,16 @@ Untracked files:
 	logs.txt
 
 nothing added to commit but untracked files present (use "git add" to track)
+On branch master
+Your branch is up to date with 'origin/master'.
+
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+	new file:   gitpush.sh
+	new file:   logs.txt
+
+[master 7c554f6] new db backup and docs
+ 2 files changed, 21 insertions(+)
+ create mode 100755 gitpush.sh
+ create mode 100644 logs.txt
