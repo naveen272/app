@@ -14,13 +14,13 @@ DB_PATH='/var/www/html/backups'
 DATABASE_NAME='demo'
 TODAY=$(date +%Y%m%d)
 OUTFILE='output'
-touch $OUTFILE_$TODAY.txt;
+touch $OUTFILE.txt;
 
 # Get all database list first
 
 DBS="$(mysql -u $USER -h $HOST -p$PASS -Bse 'show databases')"
 echo "These are the current existing Databases:"
-echo $DBS >> $OUTFILE_$TODAY.txt;
+echo $DBS >> $OUTFILE.txt;
 
 
 #make directory at /backup/dbackup/${TODAY}
@@ -31,16 +31,16 @@ echo "Backup started for database - ${DATABASE_NAME}"
 
 mysqldump -h ${HOST}   -u  ${USER}  -p${PASS}  ${DATABASE_NAME}  >> ${DB_PATH}/demo_$TODAY.sql
 if [ $? -eq 0 ]; then
- echo "moved  demo.sql to the backup folder successfully" >> $OUTFILE_$TODAY.txt;
+ echo "moved  demo.sql to the backup folder successfully" >> $OUTFILE.txt;
 else
-  echo "Error found during backup" >> $OUTFILE_$TODAY.txt;
+  echo "Error found during backup" >> $OUTFILE.txt;
   exit 1
 fi
 
 path="/var/www/html/backups"
 timestamp=$(date +%Y%m%d)    
 filename=log_$timestamp.txt    
-log=$OUTFILE_$TODAY.txt
+log=$OUTFILE.txt
 days=7
 
 START_TIME=$(date +%s)
