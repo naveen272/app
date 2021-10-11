@@ -82,8 +82,8 @@ case "5" : header( "Location: info.php" );
 break;
 //case "6" : header( "Location: register.php" );
 //break;
-case "7" : header( "Location: reports.php" );
-break;
+//case "7" : header( "Location: reports.php" );
+//break;
 }
 }
 ?>
@@ -106,8 +106,8 @@ break;
           <li><option value="2">Reset Password</option></li>
           <li><option value="4">Download</option></li>
           <li><option value="5">Search Rec</option></li>
-          <!--<li><option value="6">Create User</option></li>-->
-          <li><option value="7">Old Data</option></li>
+          <!--<li><option value="6">Create User</option></li>
+          <li><option value="7">Old Data</option></li>-->
           <li></select></li>
         <input type="submit" name="submit"/>
     </form>

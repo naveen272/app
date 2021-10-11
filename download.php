@@ -59,4 +59,14 @@ readfile($filename);
 
 // deleting file
 unlink($filename);
+if(isset($_GET["from_date"]) && isset($_GET["to_date"]) ){
+	$sql = mysqli_query($link,"SELECT SUM(amount) as amount FROM employees where date BETWEEN '".$_GET["from_date"]."' AND '".$_GET["to_date"]."'");
+} else if($_SESSION["role"] == "admin"){
+	$sql = mysqli_query($link,"SELECT SUM(amount) as amount FROM employees where MONTH(date)=MONTH(now()) and YEAR(date)=YEAR(now())");
+} else {
+  $sql = mysqli_query($link,"SELECT SUM(amount) as amount FROM employees where uname='".$_SESSION["username"]."' and MONTH(date)=MONTH(now()) and YEAR(date)=YEAR(now())");
+}
+$row = mysqli_fetch_array($sql);
+echo $row['amount'];
 exit();
+?>
