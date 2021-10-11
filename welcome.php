@@ -119,11 +119,24 @@ break;
 					if($_SESSION["role"] == "admin"){
 						$sql = mysqli_query($link,"SELECT SUM(amount) as amount FROM employees ");
 					} else{
+						$sql = mysqli_query($link,"SELECT SUM(amount) as amount FROM employees where uname='".$_SESSION["username"]."' ");
+					}
+                    $row = mysqli_fetch_array($sql);
+                    echo $row['amount'];
+?>"/> </a>       
+</p>
+<p>
+<a style="color:black;" >Currnet Month Total
+<input style="color:black;" color: #070708 class="form-control" value="<?php
+                    require_once "config.php";
+					if($_SESSION["role"] == "admin"){
+						$sql = mysqli_query($link,"SELECT SUM(amount) as amount FROM employees ");
+					} else{
 						$sql = mysqli_query($link,"SELECT SUM(amount) as amount FROM employees where uname='".$_SESSION["username"]."' and MONTH(date)=MONTH(now()) and YEAR(date)=YEAR(now())");
 					}
                     $row = mysqli_fetch_array($sql);
                     echo $row['amount'];
-?>"/> </a>             
+?>"/> </a>       
 </p>
                     <?php
                     // Include config file
