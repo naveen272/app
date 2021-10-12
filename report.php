@@ -42,10 +42,10 @@ $result = mysqli_query($link, $sql);
    <style>
 body {
     margin: 0%;
-    padding-top: 164px;
+    padding-top: 17%;
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-size: 49px;
-    line-height: 1.428571;
+    font-size: 600%;
+    line-height: 3.428571;
     color: #101010;
     background-color: #eaeedb;
 }
