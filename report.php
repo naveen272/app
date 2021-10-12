@@ -41,13 +41,13 @@ $result = mysqli_query($link, $sql);
    </head> 
    <style>
 body {
-    margin: 11%;
-    padding-top: 153px;
+    margin: 0%;
+    padding-top: 164px;
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-size: 37px;
-    line-height: 1.42857143;
-    color: #333;
-    background-color: #fff;
+    font-size: 49px;
+    line-height: 1.428571;
+    color: #101010;
+    background-color: #eaeedb;
 }
 .btn {
     display: inline-block;
