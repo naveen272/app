@@ -32,16 +32,23 @@ $result = mysqli_query($link, $sql);
 <html>  
  <head>  
   <title>Export Data</title>  
-   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />  
-   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  
-   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> 
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script> 
    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="css/jquery-ui.js"></script>
+    <link rel="stylesheet" href="css/jquery-ui.css">
    </head> 
    <style>
-  body {
-    margin: 13px;
-    padding-top: 100px;
-} 
+body {
+    margin: 11%;
+    padding-top: 153px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 37px;
+    line-height: 1.42857143;
+    color: #333;
+    background-color: #fff;
+}
 .btn {
     display: inline-block;
     padding: 5px 15px;
@@ -75,8 +82,8 @@ input[type=text]:focus, input[type=password]:focus {
                      <div class="col-md-16">
                             <form method='post' action='download.php'>
                                 <!-- Datepicker -->
-                                <input class="form-group" type='text/css' class='datepicker' placeholder="From date" name="from_date" id='from_date' readonly>
-                                <input class="form-group" type='text/css' class='datepicker' placeholder="To date" name="to_date" id='to_date' readonly>
+                                <input class="form-group" type='date' class='datepicker' placeholder="From date" name="from_date" id='from_date' readonly>
+                                <input class="form-group" type='date' class='datepicker' placeholder="To date" name="to_date" id='to_date' readonly>
                                 <!-- Export button -->
                                 <input type='submit' value='Export' name='Export'>
                                 <a href="welcome.php" >Cancel</a>
