@@ -41,7 +41,7 @@ $result = mysqli_query($link, $sql);
    </head> 
    <style>
 body {
-    margin: -16%;
+    margin: -12%;
     padding-top: 28%;
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
     font-size: 568%;
