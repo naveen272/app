@@ -784,3 +784,21 @@ came inside of email
   response: '535-5.7.8 Username and Password not accepted. Learn more at\n535 5.7.8  https://support.google.com/mail/?p=BadCredentials j2-20020aa78d02000000b0051827128aeasm13215654pfe.131 - gsmtp',
   responseCode: 535,
   command: 'AUTH PLAIN' }
+HTTPS Server listening
+came inside of email
+{ Error: Invalid login: 535-5.7.8 Username and Password not accepted. Learn more at
+535 5.7.8  https://support.google.com/mail/?p=BadCredentials w2-20020a17090a1b8200b001e88c4bb3dcsm5752000pjc.25 - gsmtp
+    at SMTPConnection._formatError (/var/www/html/mailer/node_modules/nodemailer/lib/smtp-connection/index.js:784:19)
+    at SMTPConnection._actionAUTHComplete (/var/www/html/mailer/node_modules/nodemailer/lib/smtp-connection/index.js:1536:34)
+    at SMTPConnection._responseActions.push.str (/var/www/html/mailer/node_modules/nodemailer/lib/smtp-connection/index.js:540:26)
+    at SMTPConnection._processResponse (/var/www/html/mailer/node_modules/nodemailer/lib/smtp-connection/index.js:947:20)
+    at SMTPConnection._onData (/var/www/html/mailer/node_modules/nodemailer/lib/smtp-connection/index.js:749:14)
+    at TLSSocket.SMTPConnection._onSocketData.chunk (/var/www/html/mailer/node_modules/nodemailer/lib/smtp-connection/index.js:189:44)
+    at emitOne (events.js:116:13)
+    at TLSSocket.emit (events.js:211:7)
+    at addChunk (_stream_readable.js:263:12)
+    at readableAddChunk (_stream_readable.js:250:11)
+  code: 'EAUTH',
+  response: '535-5.7.8 Username and Password not accepted. Learn more at\n535 5.7.8  https://support.google.com/mail/?p=BadCredentials w2-20020a17090a1b8200b001e88c4bb3dcsm5752000pjc.25 - gsmtp',
+  responseCode: 535,
+  command: 'AUTH PLAIN' }
