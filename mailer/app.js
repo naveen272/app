@@ -22,7 +22,7 @@ app.listen(3000, function (err) {
       service: 'gmail',
       auth: {
         user: 'homesgoods3@gmail.com',
-        pass: 'N@veen@141'
+        pass: '9030187439'
       }
     });
     

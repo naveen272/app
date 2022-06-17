@@ -21,7 +21,7 @@ if($mail){
     //$mail->Username = "testconqueroo@gmail.com"; 
     //$mail->Password = "Softforce@100";
     $mail->Username = "homesgoods3@gmail.com"; 
-    $mail->Password = "N@veen@141";
+    $mail->Password = "9030187439";
 
     }
 $message = "<h3>Name:</h3>".$mailerName."<br><h3>Mail Id :</h3>".$usermail."<br><h3>Feedback :</h3>".$message1;
