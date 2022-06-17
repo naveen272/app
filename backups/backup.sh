@@ -41,7 +41,7 @@ path="/var/www/html/backups"
 timestamp=$(date +%Y%m%d)    
 filename=log_$timestamp.txt    
 log=$OUTFILE.txt
-days=7
+days=2
 
 START_TIME=$(date +%s)
 
