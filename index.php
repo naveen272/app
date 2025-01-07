@@ -13,12 +13,12 @@
   </nav>
  <!-- Slide Show -->
 <section>
-  <img class="mySlides" src="./images/image1.jpg"  style="width:100%">
-  <img class="mySlides" src="./images/image2.jpg"  style="width:100%">
-  <img class="mySlides" src="./images/image3.jpg"  style="width:100%">
-  <img class="mySlides" src="./images/image4.jpg"  style="width:100%">
-  <img class="mySlides" src="./images/image5.jpg"  style="width:100%">
-  <img class="mySlides" src="./images/image6.jpg"  style="width:100%">
+  <img class="mySlides" src="./images/image1.jpg"  style="width:125%">
+  <img class="mySlides" src="./images/image2.jpg"  style="width:125%">
+  <img class="mySlides" src="./images/image3.jpg"  style="width:125%">
+  <img class="mySlides" src="./images/image4.jpg"  style="width:125%">
+  <img class="mySlides" src="./images/image5.jpg"  style="width:125%">
+  <img class="mySlides" src="./images/image6.jpg"  style="width:125%">
 
 </section>
 <!-- Band Description -->
@@ -30,8 +30,8 @@
 <!-- Footer -->
 <footer class="w3-container  w3-center w3-black w3-xlarge">
   <a href="https://www.facebook.com/naveen.chowdary.7946/"><i class="fa fa-facebook-official"></i></a>
-  <a href="https://www.youtube.com/channel/UCvENLlkaFwGXj_gYsWFjLJA"><i class="fa fa-youtube"></i></a>
-  <!--<a href="#"><i class="fa fa-twitter"></i></a>-->
+  <a href="https://www.youtube.com/@sravaniboginni"><i class="fa fa-youtube"></i></a>
+  <a href="#"><i class="fa fa-twitter"></i></a>
   <a href="https://www.instagram.com/chowdary_naveen143/"><i class="fa fa-instagram"></i></a>
   <a href="images/whatsapp.png"><i class="fa fa-whatsapp"></i></a>
   <p class="w3-medium">
@@ -39,8 +39,8 @@
   <a w3-left ><i class="fa fa-mobile w3-xlarge" ></i>9553667939</a>
 </footer>
 <footer class="w3-container">
-Powered by <a href="https://homes.ddnsking.com/" target="_blank">Naveen</a>
-  <a> © Copyright 2021</a> 
+Powered by <a href="https://naveen.ddns.net/" target="_blank">Naveen</a>
+  <a> © Copyright 2025</a> 
   </footer>
 <script>
 // Automatic Slideshow - change image every 3 seconds

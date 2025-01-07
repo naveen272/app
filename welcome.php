@@ -21,11 +21,10 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
       <link rel="stylesheet" href="css/foundation.css" />
     <style type="">
 .container{
-    padding: 2px;
+    padding: .5px;
     line-height: 1.42857143;
     vertical-align: top;
-    border-top: 1px solid;
-    color: #333;
+    
 }
 .btn {
     display: inline-block;
@@ -63,6 +62,12 @@ div.desc {
   padding: 15px;
   text-align: center;
 }
+.custom-btn {
+    font-size: 10px; /* Increase button font size */
+    padding: 2px 2px; /* Add padding */
+    margin: 2px; /* Add space between buttons */
+    border-radius: 4px; /* Rounded corners */
+}
 
 </style>
 </head>
@@ -80,10 +85,12 @@ case "4" : header( "Location: report.php" );
 break;
 case "5" : header( "Location: info.php" );
 break;
-//case "6" : header( "Location: register.php" );
+//case "6" : header( "Location: dataupload.php" );
 //break;
-//case "7" : header( "Location: reports.php" );
-//break;
+case "7" : header( "Location: analys.php" );
+break;
+case "8" : header( "Location: reports.php" );
+break;
 }
 }
 ?>
@@ -102,12 +109,13 @@ break;
    <form method="post" action="">
    <select name="website">
           <li><option value="0">select</option></li>
-          <li><option value="1">Add Item</option></li>   
-          <li><option value="2">Reset Password</option></li>
+          <li><option value="1">Add</option></li>   
+          <li><option value="2">Password Reset</option></li>
           <li><option value="4">Download</option></li>
-          <li><option value="5">Search Rec</option></li>
-          <!--<li><option value="6">Create User</option></li>
-          <li><option value="7">Old Data</option></li>-->
+          <li><option value="5">SearchData</option></li>
+          <!--<li><option value="6">Data Analysis</option></li>-->
+          <li><option value="7">AnalyzeData</option></li>
+          <li><option value="8">Results</option></li>
           <li></select></li>
         <input type="submit" name="submit"/>
     </form>
@@ -129,10 +137,17 @@ break;
 <a style="color:black;" >Currnet Month Total
 <input style="color:black;" color: #070708 class="form-control" value="<?php
                     require_once "config.php";
+                    $startDate = date('Y-m-21', strtotime('first day of last month'));
+                    $endDate = date('Y-m-20', strtotime('today'));
 					if($_SESSION["role"] == "admin"){
 						$sql = mysqli_query($link,"SELECT SUM(amount) as amount FROM employees ");
 					} else{
-						$sql = mysqli_query($link,"SELECT SUM(amount) as amount FROM employees where uname='".$_SESSION["username"]."' and MONTH(date)=MONTH(now()) and YEAR(date)=YEAR(now())");
+					  //$sql = mysqli_query($link,"SELECT SUM(amount) as amount FROM employees where uname='".$_SESSION["username"]."' and MONTH(Date)=MONTH(now()) and YEAR(date)=YEAR(now())");
+                      $sql = mysqli_query($link,"SELECT SUM(amount) as amount 
+          FROM employees 
+          WHERE uname='".$_SESSION["username"]."' 
+          AND Date BETWEEN '$startDate' AND '$endDate'");
+
 					}
                     $row = mysqli_fetch_array($sql);
                     echo $row['amount'];
@@ -149,21 +164,24 @@ break;
                       else{
                           $page = 1;
                         }
-                        $num_per_page = 40;
+                        $num_per_page = 50;
                         $start_from = ($page-1)*$num_per_page;
 
                     // Attempt select query execution
 					if($_SESSION["role"] == "admin"){
 						$sql = "SELECT * FROM employees limit $start_from,$num_per_page";
 					} else{
-						$sql = "SELECT * FROM employees where uname='".$_SESSION["username"]."' and MONTH(date)=MONTH(now())
-								and YEAR(date)=YEAR(now()) limit $start_from,$num_per_page";
+					//$sql = "SELECT * FROM employees where uname='".$_SESSION["username"]."' and MONTH(date)=MONTH(now()) and YEAR(date)=YEAR(now()) limit $start_from,$num_per_page";
+                      $sql = "SELECT * FROM employees where uname='".$_SESSION["username"]."' AND Date BETWEEN '$startDate' AND '$endDate' limit $start_from,$num_per_page";
+					
 					}
                     //$result = mysqli_query($link,$query);
                     if($_SESSION["role"] == "admin"){
                         $query = "select * from employees";
                     }else{    
-                        $query = "select * from employees where uname='".$_SESSION["username"]."' and MONTH(date)=MONTH(now()) and YEAR(date)=YEAR(now()) ";
+                    //$query = "select * from employees where uname='".$_SESSION["username"]."' and MONTH(date)=MONTH(now()) and YEAR(date)=YEAR(now()) ";
+                    $query = "select * from employees where uname='".$_SESSION["username"]."' AND Date BETWEEN '$startDate' AND '$endDate'";
+					 
                     }
                     $result = mysqli_query($link,$query);
                     $total_record = mysqli_num_rows($result);
@@ -205,15 +223,19 @@ break;
                                         echo "<td>" . $row['amount'] . "</td>";
                                         echo "<td>" . $row['uname'] . "</td>";
                                         /*if($row['file_path'] != ''){
-											echo "<td> <a href='downloads.php?id=". $row['id'] ."' title='Download' data-toggle='tooltip'><span class='glyphicon glyphicon-download'></span></a> </td>";
+											echo "<td> <a href='generate_pdf.php?id=". $row['id'] ."' title='Download' data-toggle='tooltip'><span class='glyphicon glyphicon-download'></span></a> </td>";
 										} else{
 											echo "<td></td>";
 										}*/
                                         echo "<td>";
-                                        echo "<a href='read.php?id=". $row['id'] ."' title='View Record' data-toggle='tooltip'> <span class='glyphicon glyphicon-eye-open'></span></a>";
-                                        echo "<a href='update.php?id=". $row['id'] ."' title='Update Record' data-toggle='tooltip'><span class='glyphicon glyphicon-pencil'></span></a>";
-                                        echo "<a href='delete.php?id=". $row['id'] ."' title='Delete Record' data-toggle='tooltip'><span class='glyphicon glyphicon-trash'></span></a>";
-                                        //echo "<a href='downloads.php?id=". $row['id'] ."' title='Download' data-toggle='tooltip'><span class='glyphicon glyphicon-download'></span></a>";
+                                        // View Button
+                                        echo "<a href='read.php?id=" . $row['id'] . "' title='View Record' data-toggle='tooltip' class='btn btn-primary btn-lg custom-btn'> <span class='glyphicon glyphicon-eye-open'></span></a>";
+                                        // Update Button
+                                        echo "<a href='update.php?id=" . $row['id'] . "' title='Update Record' data-toggle='tooltip' class='btn btn-warning btn-lg custom-btn'> <span class='glyphicon glyphicon-pencil'></span> </a>";
+                                        // Delete Button
+                                        echo "<a href='delete.php?id=" . $row['id'] . "' title='Delete Record' data-toggle='tooltip' class='btn btn-danger btn-lg custom-btn'> <span class='glyphicon glyphicon-trash'></span>  </a>";
+                                        // Download Button
+                                        echo "<a href='generate_pdf.php?id=" . $row['id'] . "' title='Download' data-toggle='tooltip' class='btn btn-success btn-lg custom-btn'> <span class='glyphicon glyphicon-download'></span> </a>";                                        
                                         echo "</td>";
                                          /* if($_SESSION["role"] == "admin"){ 
                                         echo "<td>";

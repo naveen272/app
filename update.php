@@ -1,13 +1,13 @@
 <?php
 // Include config file
 require_once "config.php";
- 
+
 // Define variables and initialize with empty values
 $name = $date = $amount = "";
 $name_err = $date_err = $amount_err = "";
- 
+
 // Processing form data when form is submitted
-if(isset($_POST["id"]) && !empty($_POST["id"])){
+if(isset($_POST["id"]) && !empty($_POST["id"])) {
     // Get hidden input value
     $id = $_POST["id"];
     
@@ -21,10 +21,10 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
         $name = $input_name;
     }
     
-    // Validate date date
+    // Validate date
     $input_date = trim($_POST["date"]);
     if(empty($input_date)){
-        $date_err = "Please enter an date.";     
+        $date_err = "Please enter a date.";     
     } else{
         $date = $input_date;
     }
@@ -32,75 +32,64 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
     // Validate amount
     $input_amount = trim($_POST["amount"]);
     if(empty($input_amount)){
-        $amount_err = "Please enter the amount amount.";     
+        $amount_err = "Please enter the amount.";     
     } elseif(!ctype_digit($input_amount)){
         $amount_err = "Please enter a positive integer value.";
     } else{
         $amount = $input_amount;
     }
 
-// File upload
-    $filename = $_FILES["uploadfile"]["name"];
-	$tempname = $_FILES["uploadfile"]["tmp_name"];   
-    $folder = "documents/".$filename;
+    // File upload (get binary content of the uploaded file)
+    $fileContent = null;
+    if (isset($_FILES["uploadfile"]) && $_FILES["uploadfile"]["error"] === UPLOAD_ERR_OK) {
+        $fileContent = file_get_contents($_FILES["uploadfile"]["tmp_name"]);
+    } else {
+        die("Error: File upload failed.");
+    }
 
-   if(empty($folder)){
-        echo ("date empty");
-   }
-    
-    // Check input errors before inserting in database
-    if(empty($name_err) && empty($date_err) && empty($amount_err)){
-        // Prepare an update statement
-        if(!empty($filename)){
-            $sql = "UPDATE employees SET name=?, date=?, amount=?, file_path=? WHERE id=?";
-
-        }else{
-            $sql = "UPDATE employees SET name=?, date=?, amount=? WHERE id=?";
-        }
+    // Check input errors before inserting into the database
+    if(empty($name_err) && empty($date_err) && empty($amount_err)) {
+        // Prepare an update statement to replace the existing image
+        $sql = "UPDATE employees SET name=?, date=?, amount=?, file_blob=? WHERE id=?";
         
-         
-        if($stmt = mysqli_prepare($link, $sql)){
-            if(!empty($filename)){
+        if($stmt = mysqli_prepare($link, $sql)) {
             // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "ssssi", $param_name, $param_date, $param_amount, $param_filepath, $param_id);
-            }else{
-                mysqli_stmt_bind_param($stmt, "sssi", $param_name, $param_date, $param_amount, $param_id);
-            }
-            
+            mysqli_stmt_bind_param($stmt, "ssssi", $param_name, $param_date, $param_amount, $param_fileBlob, $param_id);
+
             // Set parameters
             $param_name = $name;
             $param_date = $date;
             $param_amount = $amount;
+            $param_fileBlob = $fileContent;  // Save image binary data in the database
             $param_id = $id;
-            $param_filepath = $filename;
 
             // Attempt to execute the prepared statement
-            if(mysqli_stmt_execute($stmt)){
-
-                // Records updated successfully. Redirect to landing page
-                move_uploaded_file($tempname, $folder);
+            if(mysqli_stmt_execute($stmt)) {
+                // Successfully updated, redirect to the landing page
                 header("location: welcome.php");
                 exit();
-            } else{
-                echo ("Something went wrong. Please try again later." . $stmt -> error  . $filename );
+            } else {
+                echo "Something went wrong. Please try again later.";
             }
+
+            // Close statement
+            mysqli_stmt_close($stmt);
+        } else {
+            die('MySQL prepare failed: ' . mysqli_error($link));
         }
-         
-        // Close statement
-        mysqli_stmt_close($stmt);
     }
-    
+
     // Close connection
     mysqli_close($link);
-} else{
+} else {
     // Check existence of id parameter before processing further
-    if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
+    if(isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
         // Get URL parameter
         $id =  trim($_GET["id"]);
         
         // Prepare a select statement
         $sql = "SELECT * FROM employees WHERE id = ?";
-        if($stmt = mysqli_prepare($link, $sql)){
+        if($stmt = mysqli_prepare($link, $sql)) {
             // Bind variables to the prepared statement as parameters
             mysqli_stmt_bind_param($stmt, "i", $param_id);
             
@@ -108,42 +97,41 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
             $param_id = $id;
             
             // Attempt to execute the prepared statement
-            if(mysqli_stmt_execute($stmt)){
+            if(mysqli_stmt_execute($stmt)) {
                 $result = mysqli_stmt_get_result($stmt);
-    
-                if(mysqli_num_rows($result) == 1){
-                    /* Fetch result row as an associative array. Since the result set
-                    contains only one row, we don't need to use while loop */
+
+                if(mysqli_num_rows($result) == 1) {
+                    // Fetch the result as an associative array
                     $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
                     
                     // Retrieve individual field value
                     $name = $row["name"];
                     $date = $row["date"];
                     $amount = $row["amount"];
-                } else{
+                } else {
                     // URL doesn't contain valid id. Redirect to error page
                     header("location: error.php");
                     exit();
                 }
-                
-            } else{
+            } else {
                 echo "Oops! Something went wrong. Please try again later.";
             }
         }
-        
+
         // Close statement
         mysqli_stmt_close($stmt);
         
         // Close connection
         mysqli_close($link);
-    }  else{
+    } else {
         // URL doesn't contain id parameter. Redirect to error page
         header("location: error.php");
         exit();
     }
 }
 ?>
- 
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

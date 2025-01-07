@@ -11,13 +11,14 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 <?php
 include "config.php";
 $filename = 'Report'.'.csv';
-
+//$startDate = date('Y-m-21', strtotime('first day of last month'));
+//$endDate = date('Y-m-20', strtotime('today'));
 // POST values
 $from_date = $_POST['from_date'];
 $to_date = $_POST['to_date'];
 
 // Select query
-$query = "SELECT * FROM employees ORDER BY id asc";
+$query = "SELECT * FROM employees date between '".$from_date."' and '".$to_date."' ORDER BY id asc";
 
 if(isset($_POST['from_date']) && isset($_POST['to_date'])){
     if($_SESSION["role"] == "admin"){
@@ -33,7 +34,7 @@ $employee_arr = array();
 $file = fopen($filename,"w");
 
 // Header row - Remove this code if you don't want a header row in the export file.
-$employee_arr = array("S.No","name","date","amount","Created By","Documents"); 
+$employee_arr = array("S.No","name","date","amount","Created By"); 
 fputcsv($file,$employee_arr);  
 $i=1; 
 while($row = mysqli_fetch_assoc($result)){
@@ -42,9 +43,9 @@ while($row = mysqli_fetch_assoc($result)){
     $date = $row['date'];
     $amount = $row['amount'];
     $uname = $row['uname'];
-    $files= $row['file_path'];
+    //$files= $row['file_path'];
     // Write to file 
-    $employee_arr = array($id,$name,$date,$amount,$uname,$files);
+    $employee_arr = array($id,$name,$date,$amount,$uname);
     fputcsv($file,$employee_arr);  
     $i++; 
 }
@@ -64,7 +65,8 @@ if(isset($_GET["from_date"]) && isset($_GET["to_date"]) ){
 } else if($_SESSION["role"] == "admin"){
 	$sql = mysqli_query($link,"SELECT SUM(amount) as amount FROM employees where MONTH(date)=MONTH(now()) and YEAR(date)=YEAR(now())");
 } else {
-  $sql = mysqli_query($link,"SELECT SUM(amount) as amount FROM employees where uname='".$_SESSION["username"]."' and MONTH(date)=MONTH(now()) and YEAR(date)=YEAR(now())");
+  //$sql = mysqli_query($link,"SELECT SUM(amount) as amount FROM employees where uname='".$_SESSION["username"]."' and MONTH(date)=MONTH(now()) and YEAR(date)=YEAR(now())");
+  $sql = mysqli_query($link,"SELECT SUM(amount) as amount FROM employees WHERE uname='".$_SESSION["username"]."' AND Date BETWEEN '$from_date' AND '$to_date'");
 }
 $row = mysqli_fetch_array($sql);
 echo $row['amount'];

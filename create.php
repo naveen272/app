@@ -2,89 +2,92 @@
 session_start();
 // Include config file
 require_once "config.php";
- 
+
 // Define variables and initialize with empty values
 $name = $date = $amount = "";
 $name_err = $date_err = $amount_err = "";
- 
+
 // Processing form data when form is submitted
-if($_SERVER["REQUEST_METHOD"] == "POST"){
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validate name
     $input_name = trim($_POST["Item"]);
-    if(empty($input_name)){
+    if (empty($input_name)) {
         $name_err = "Please enter a name.";
-    } elseif(!filter_var($input_name, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>"/^[a-zA-Z,\s]+$/")))){
+    } elseif (!filter_var($input_name, FILTER_VALIDATE_REGEXP, ["options" => ["regexp" => "/^[a-zA-Z,\s]+$/"]])) {
         $name_err = "Please enter a valid name.";
-    } else{
+    } else {
         $name = $input_name;
     }
-    $uname=$_SESSION["username"];
+
+    $uname = $_SESSION["username"];
+
     // Validate date
     $input_date = trim($_POST["date"]);
-    if(empty($input_date)){
-        $date_err = "Please enter an date.";     
-    } else{
+    if (empty($input_date)) {
+        $date_err = "Please enter a date.";
+    } else {
         $date = $input_date;
     }
-    
+
     // Validate amount
     $input_amount = trim($_POST["amount"]);
-    if(empty($input_amount)){
-        $amount_err = "Please enter the amount.";     
-    } elseif(!ctype_digit($input_amount)){
+    if (empty($input_amount)) {
+        $amount_err = "Please enter the amount.";
+    } elseif (!ctype_digit($input_amount)) {
         $amount_err = "Please enter a positive integer value.";
-    } else{
+    } else {
         $amount = $input_amount;
     }
-    
-	//validate uploaded file
-	
-	$filename = $_FILES["uploadfile"]["name"];
-	$tempname = $_FILES["uploadfile"]["tmp_name"];   
-    $folder = "documents/".$filename;
-    
-    if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
-   echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-   $uploadOk = 0;
-   }
 
+    // Validate and process file upload
+    $fileContent = null;
+    if (isset($_FILES["uploadfile"]) && $_FILES["uploadfile"]["error"] === UPLOAD_ERR_OK) {
+        $fileContent = file_get_contents($_FILES["uploadfile"]["tmp_name"]);
+    } else {
+        die("Error: File upload failed.");
+    }
 
-    // Check input errors before inserting in database
-    if(empty($name_err) && empty($date_err) && empty($amount_err)){
+    // Check input errors before inserting into the database
+    if (empty($name_err) && empty($date_err) && empty($amount_err)) {
         // Prepare an insert statement
-        $sql = "INSERT INTO employees (uname, name, date, amount, file_path) VALUES (?, ?, ?, ?, ?)";
-         
-        if($stmt = mysqli_prepare($link, $sql)){
+        $sql = "INSERT INTO employees (uname, name, date, amount, file_blob, file_path) VALUES (?, ?, ?, ?, ?, '')";
+
+
+        // Check for SQL prepare error
+        if ($stmt = mysqli_prepare($link, $sql)) {
             // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "sssss", $param_uname, $param_name, $param_date, $param_amount, $param_filepath);
-            
+            mysqli_stmt_bind_param($stmt, "sssss", $param_uname, $param_name, $param_date, $param_amount, $param_fileBlob);
+
+
             // Set parameters
             $param_uname = $uname;
-			$param_name = $name;
+            $param_name = $name;
             $param_date = $date;
             $param_amount = $amount;
-            $param_filepath = $filename;
-            
+            $param_fileBlob = $fileContent;
+
             // Attempt to execute the prepared statement
-            if(mysqli_stmt_execute($stmt)){
+            if (mysqli_stmt_execute($stmt)) {
                 // Records created successfully. Redirect to landing page
-				move_uploaded_file($tempname, $folder);
                 header("location: welcome.php");
                 exit();
-            } else{
+            } else {
                 echo "Something went wrong. Please try again later.";
             }
+
+            // Close the statement
+            mysqli_stmt_close($stmt);
+        } else {
+            // Output MySQL error if prepare fails
+            die('MySQL prepare failed: ' . mysqli_error($link));
         }
-         
-        // Close statement
-        mysqli_stmt_close($stmt);
     }
-    
     // Close connection
     mysqli_close($link);
 }
 ?>
- 
+
+
 <!DOCTYPE html>
 <html lang="en">
 <meta name="viewport" content="width=device-width, initial-scale=1">

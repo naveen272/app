@@ -8,7 +8,7 @@
 # Config Variables:
 USER='root'
 HOST='localhost'
-PASS='admin@123'
+PASS='admin1234'
 export PATH=/bin:/usr/bin:/usr/local/bin
 DB_PATH='/var/www/html/backups'
 DATABASE_NAME='demo'
