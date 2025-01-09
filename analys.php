@@ -7,6 +7,18 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     header("location: index.php");
     exit;
 }
+
+// Include the config file
+require_once 'config.php';
+
+// Initialize variables for total amount and date filtering
+$totalAmount = 0;
+$start_date = isset($_GET['start_date']) ? $_GET['start_date'] : '';
+$end_date = isset($_GET['end_date']) ? $_GET['end_date'] : '';
+
+// Get the logged-in user's username
+$loggedInUser = $_SESSION['username'];
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -44,6 +56,10 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
             margin: 20px 0;
             font-weight: bold;
         }
+
+        .export-btn {
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
@@ -55,14 +71,85 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     <!-- Date Filter Form -->
     <form method="GET" class="filter-container" id="filterForm">
         <label for="start_date">Start Date:</label>
-        <input type="date" id="start_date" name="start_date" value="<?php echo isset($_GET['start_date']) ? $_GET['start_date'] : ''; ?>" required>
+        <input type="date" id="start_date" name="start_date" value="<?php echo $start_date; ?>" required>
         <label for="end_date">End Date:</label>
-        <input type="date" id="end_date" name="end_date" value="<?php echo isset($_GET['end_date']) ? $_GET['end_date'] : ''; ?>" required>
+        <input type="date" id="end_date" name="end_date" value="<?php echo $end_date; ?>" required>
         <button type="submit">Filter</button>
-        <button type="button" id="clearButton">ClearData</button>
+        <button type="button" id="clearButton">Clear Data</button>
+        <!-- Export Button -->
+        <button id="exportButton" class="export-btn">Export</button>
         <a href="welcome.php" class="btn btn-danger">Cancel</a>
     </form>
-    <!-- Initialize DataTable -->
+
+    <?php
+    // Check if filter is applied
+    if ($start_date && $end_date) {
+        // Query to fetch data with the date filter
+        $sql = "SELECT id, uname, name, amount, date FROM employees WHERE uname = '$loggedInUser' AND date BETWEEN '$start_date' AND '$end_date'";
+        $result = mysqli_query($link, $sql);
+
+        if ($result) {
+            // Fetch data and analyze
+            $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+            $analysis = [];
+            foreach ($data as $row) {
+                $name = strtolower(trim($row['name']));
+                $amount = (float)$row['amount'];
+                if (!isset($analysis[$name])) {
+                    $analysis[$name] = ['count' => 0, 'total' => 0];
+                }
+                $analysis[$name]['count']++;
+                $analysis[$name]['total'] += $amount;
+                $totalAmount += $amount;
+            }
+
+            // Sort analysis by Quantity
+            uasort($analysis, function ($a, $b) {
+                return $b['count'] <=> $a['count'];
+            });
+
+            // Display the results
+            echo "<h2>Analysis Report</h2>";
+            echo "<table id='analysisTable' class='display responsive' border='1'>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Quantity</th>
+                            <th>Total Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>";
+            foreach ($analysis as $name => $stats) {
+                echo "<tr>
+                        <td>" . ucfirst($name) . "</td>
+                        <td>{$stats['count']}</td>
+                        <td>{$stats['total']}</td>
+                    </tr>";
+            }
+            echo "</tbody>
+                  </table>";
+        } else {
+            echo "Error: " . mysqli_error($link);
+        }
+    }
+
+    // Close the connection
+    mysqli_close($link);
+    ?>
+    
+    <!-- Total Amount Container -->
+    <div class="total-container">
+        <?php
+        if (isset($totalAmount)) {
+            echo "Total Amount: " . $totalAmount;
+        }
+        ?>
+    </div>
+
+
+
+    <!-- JavaScript for Export -->
     <script>
         $(document).ready(function () {
             var table = $('#analysisTable').DataTable({
@@ -73,105 +160,38 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                 "responsive": true
             });
 
-            // Clear data from the table when the clear button is clicked
+            // Clear data from the table
             $('#clearButton').on('click', function () {
-                // Clear the data in the table (without page reload)
                 table.clear().draw();
-                // Reset the filter form but keep the date inputs empty
                 $('#start_date').val('');
                 $('#end_date').val('');
-                // Optionally, you can trigger form submission to reload the page with no filter
                 $('#filterForm').submit();
+            });
+
+            // Export to CSV
+            $('#exportButton').on('click', function () {
+                var csvContent = "data:text/csv;charset=utf-8,";
+                csvContent += "Name,Quantity,Total Amount\n";
+                
+                // Add table rows
+                table.rows().every(function (rowIdx, tableLoop, rowLoop) {
+                    var data = this.data();
+                    csvContent += data.join(",") + "\n";
+                });
+
+                // Add the total amount as the last row
+                csvContent += "Total,,<?php echo $totalAmount; ?>\n";
+
+                // Create and download CSV
+                var encodedUri = encodeURI(csvContent);
+                var link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "analysis_results.csv");
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             });
         });
     </script>
 </body>
 </html>
-<?php
-
-// Check if the user is logged in, if not then redirect him to the login page
-if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
-    header("location: index.php");
-    exit;
-}
-
-// Include the config file
-require_once 'config.php';
-
-// Initialize variables for total amount
-$totalAmount = 0;
-
-// Get the logged-in user's username
-$loggedInUser = $_SESSION['username'];
-
-// Check if filter is applied (both start_date and end_date are set)
-$start_date = isset($_GET['start_date']) ? $_GET['start_date'] : '';
-$end_date = isset($_GET['end_date']) ? $_GET['end_date'] : '';
-
-if ($start_date && $end_date) {
-    // Initialize SQL query with date filter and logged-in user filter
-    $sql = "SELECT id, uname, name, amount, date FROM employees WHERE uname = '$loggedInUser' AND date BETWEEN '$start_date' AND '$end_date'";
-
-    // Execute the query
-    $result = mysqli_query($link, $sql);
-
-    if ($result) {
-        // Fetch data
-        $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-        // Analyze data: Group by "name" (case-insensitive) and calculate total amount
-        $analysis = [];
-        foreach ($data as $row) {
-            $name = strtolower(trim($row['name']));
-            $amount = (float)$row['amount'];
-            if (!isset($analysis[$name])) {
-                $analysis[$name] = ['count' => 0, 'total' => 0];
-            }
-            $analysis[$name]['count']++;
-            $analysis[$name]['total'] += $amount;
-
-            // Add to the total amount
-            $totalAmount += $amount;
-        }
-
-        // Sort analysis by frequency (descending)
-        uasort($analysis, function ($a, $b) {
-            return $b['count'] <=> $a['count'];
-        });
-
-        // Generate the table for display
-        echo "<h2>Analysis Results</h2>";
-        echo "<table id='analysisTable' class='display responsive' border='1'>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Frequency</th>
-                        <th>Total Amount</th>
-                    </tr>
-                </thead>
-                <tbody>";
-        foreach ($analysis as $name => $stats) {
-            echo "<tr>
-                    <td>" . ucfirst($name) . "</td>
-                    <td>{$stats['count']}</td>
-                    <td>{$stats['total']}</td>
-                </tr>";
-        }
-        echo "</tbody>
-              </table>";
-    } else {
-        echo "Error: " . mysqli_error($link);
-    }
-}
-
-// Close the connection
-mysqli_close($link);
-?>
-    <!-- Total Amount Container -->
-    <div class="total-container">
-        <?php
-        if (isset($totalAmount)) {
-            echo "Total Amount: " . $totalAmount;
-        }
-        ?>
-    </div>
