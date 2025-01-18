@@ -40,12 +40,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Validate and process file upload
-    $fileContent = null;
-    if (isset($_FILES["uploadfile"]) && $_FILES["uploadfile"]["error"] === UPLOAD_ERR_OK) {
-        $fileContent = file_get_contents($_FILES["uploadfile"]["tmp_name"]);
-    } else {
-        die("Error: File upload failed.");
-    }
+    // Validate and process file upload
+$fileContent = null;
+if (isset($_FILES["uploadfile"]) && $_FILES["uploadfile"]["error"] === UPLOAD_ERR_OK) {
+    $fileContent = file_get_contents($_FILES["uploadfile"]["tmp_name"]);
+} elseif ($_FILES["uploadfile"]["error"] !== UPLOAD_ERR_NO_FILE) {
+    // Handle errors other than no file uploaded
+    die("Error: File upload failed. Code: " . $_FILES["uploadfile"]["error"]);
+}
+
 
     // Check input errors before inserting into the database
     if (empty($name_err) && empty($date_err) && empty($amount_err)) {

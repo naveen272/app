@@ -186,7 +186,7 @@ $loggedInUser = $_SESSION['username'];
                 var encodedUri = encodeURI(csvContent);
                 var link = document.createElement("a");
                 link.setAttribute("href", encodedUri);
-                link.setAttribute("download", "analysis_results.csv");
+                link.setAttribute("download", "analysis_report.csv");
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);

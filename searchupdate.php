@@ -7,52 +7,69 @@ $name = $date = $amount = "";
 $name_err = $date_err = $amount_err = "";
 
 // Processing form data when form is submitted
-if(isset($_POST["id"]) && !empty($_POST["id"])) {
+if (isset($_POST["id"]) && !empty($_POST["id"])) {
     // Get hidden input value
     $id = $_POST["id"];
     
     // Validate name
     $input_name = trim($_POST["name"]);
-    if(empty($input_name)){
+    if (empty($input_name)) {
         $name_err = "Please enter a name.";
-    } elseif(!filter_var($input_name, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>"/^[a-zA-Z,\s]+$/")))){
+    } elseif (!filter_var($input_name, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => "/^[a-zA-Z,\s]+$/")))) {
         $name_err = "Please enter a valid name.";
-    } else{
+    } else {
         $name = $input_name;
     }
     
     // Validate date
     $input_date = trim($_POST["date"]);
-    if(empty($input_date)){
+    if (empty($input_date)) {
         $date_err = "Please enter a date.";     
-    } else{
+    } else {
         $date = $input_date;
     }
     
     // Validate amount
     $input_amount = trim($_POST["amount"]);
-    if(empty($input_amount)){
+    if (empty($input_amount)) {
         $amount_err = "Please enter the amount.";     
-    } elseif(!ctype_digit($input_amount)){
+    } elseif (!ctype_digit($input_amount)) {
         $amount_err = "Please enter a positive integer value.";
-    } else{
+    } else {
         $amount = $input_amount;
     }
 
-    // File upload (get binary content of the uploaded file)
+    // File upload: Get binary content of the uploaded file or retain existing file
     $fileContent = null;
     if (isset($_FILES["uploadfile"]) && $_FILES["uploadfile"]["error"] === UPLOAD_ERR_OK) {
+        // New file uploaded
         $fileContent = file_get_contents($_FILES["uploadfile"]["tmp_name"]);
+    } elseif ($_FILES["uploadfile"]["error"] === UPLOAD_ERR_NO_FILE) {
+        // No new file uploaded, retrieve the existing image data
+        $sql = "SELECT file_blob FROM employees WHERE id = ?";
+        if ($stmt = mysqli_prepare($link, $sql)) {
+            mysqli_stmt_bind_param($stmt, "i", $param_id);
+            $param_id = $id;
+
+            if (mysqli_stmt_execute($stmt)) {
+                $result = mysqli_stmt_get_result($stmt);
+                if ($row = mysqli_fetch_assoc($result)) {
+                    $fileContent = $row['file_blob']; // Use existing image data
+                }
+            }
+            mysqli_stmt_close($stmt);
+        }
     } else {
-        die("Error: File upload failed.");
+        // Handle other file upload errors
+        die("Error: File upload failed. Code: " . $_FILES["uploadfile"]["error"]);
     }
 
     // Check input errors before inserting into the database
-    if(empty($name_err) && empty($date_err) && empty($amount_err)) {
-        // Prepare an update statement to replace the existing image
+    if (empty($name_err) && empty($date_err) && empty($amount_err)) {
+        // Prepare an update statement
         $sql = "UPDATE employees SET name=?, date=?, amount=?, file_blob=? WHERE id=?";
         
-        if($stmt = mysqli_prepare($link, $sql)) {
+        if ($stmt = mysqli_prepare($link, $sql)) {
             // Bind variables to the prepared statement as parameters
             mysqli_stmt_bind_param($stmt, "ssssi", $param_name, $param_date, $param_amount, $param_fileBlob, $param_id);
 
@@ -60,11 +77,11 @@ if(isset($_POST["id"]) && !empty($_POST["id"])) {
             $param_name = $name;
             $param_date = $date;
             $param_amount = $amount;
-            $param_fileBlob = $fileContent;  // Save image binary data in the database
+            $param_fileBlob = $fileContent;  // Save image binary data
             $param_id = $id;
 
             // Attempt to execute the prepared statement
-            if(mysqli_stmt_execute($stmt)) {
+            if (mysqli_stmt_execute($stmt)) {
                 // Successfully updated, redirect to the landing page
                 header("location: info.php");
                 exit();
@@ -83,13 +100,13 @@ if(isset($_POST["id"]) && !empty($_POST["id"])) {
     mysqli_close($link);
 } else {
     // Check existence of id parameter before processing further
-    if(isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
+    if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
         // Get URL parameter
-        $id =  trim($_GET["id"]);
+        $id = trim($_GET["id"]);
         
         // Prepare a select statement
         $sql = "SELECT * FROM employees WHERE id = ?";
-        if($stmt = mysqli_prepare($link, $sql)) {
+        if ($stmt = mysqli_prepare($link, $sql)) {
             // Bind variables to the prepared statement as parameters
             mysqli_stmt_bind_param($stmt, "i", $param_id);
             
@@ -97,19 +114,19 @@ if(isset($_POST["id"]) && !empty($_POST["id"])) {
             $param_id = $id;
             
             // Attempt to execute the prepared statement
-            if(mysqli_stmt_execute($stmt)) {
+            if (mysqli_stmt_execute($stmt)) {
                 $result = mysqli_stmt_get_result($stmt);
 
-                if(mysqli_num_rows($result) == 1) {
+                if (mysqli_num_rows($result) == 1) {
                     // Fetch the result as an associative array
                     $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
                     
-                    // Retrieve individual field value
+                    // Retrieve individual field values
                     $name = $row["name"];
                     $date = $row["date"];
                     $amount = $row["amount"];
                 } else {
-                    // URL doesn't contain valid id. Redirect to error page
+                    // URL doesn't contain valid id, redirect to error page
                     header("location: error.php");
                     exit();
                 }
@@ -124,7 +141,7 @@ if(isset($_POST["id"]) && !empty($_POST["id"])) {
         // Close connection
         mysqli_close($link);
     } else {
-        // URL doesn't contain id parameter. Redirect to error page
+        // URL doesn't contain id parameter, redirect to error page
         header("location: error.php");
         exit();
     }
