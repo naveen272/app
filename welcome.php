@@ -137,20 +137,51 @@ break;
 <a style="color:black;" >Currnet Month Total
 <input style="color:black;" color: #070708 class="form-control" value="<?php
                     require_once "config.php";
-                    $startDate = date('Y-m-21', strtotime('first day of last month'));
-                    $endDate = date('Y-m-20', strtotime('today'));
-					if($_SESSION["role"] == "admin"){
-						$sql = mysqli_query($link,"SELECT SUM(amount) as amount FROM employees ");
-					} else{
-					  //$sql = mysqli_query($link,"SELECT SUM(amount) as amount FROM employees where uname='".$_SESSION["username"]."' and MONTH(Date)=MONTH(now()) and YEAR(date)=YEAR(now())");
-                      $sql = mysqli_query($link,"SELECT SUM(amount) as amount 
-          FROM employees 
-          WHERE uname='".$_SESSION["username"]."' 
-          AND Date BETWEEN '$startDate' AND '$endDate'");
+            // Get the current date
+            $currentDate = new DateTime();
 
-					}
-                    $row = mysqli_fetch_array($sql);
-                    echo $row['amount'];
+            // Check if today is after the 20th of the month
+            if ($currentDate->format('d') > 20) {
+                // Shift to the 21st of the current month
+                $startDate = $currentDate->modify('first day of this month')->modify('+20 days')->format('Y-m-d');
+                $endDate = $currentDate->modify('first day of next month')->modify('+19 days')->format('Y-m-d');
+            } else {
+                // Shift to the 21st of the previous month
+                $startDate = $currentDate->modify('first day of last month')->modify('+20 days')->format('Y-m-d');
+                $endDate = $currentDate->modify('first day of this month')->modify('+19 days')->format('Y-m-d');
+            }
+
+            // Debugging: Print calculated date range
+            //echo "Start Date: $startDate, End Date: $endDate";
+
+            // SQL query based on role
+            if ($_SESSION["role"] == "admin") {
+                $stmt = $link->prepare("SELECT SUM(amount) as amount FROM employees");
+            } else {
+                $stmt = $link->prepare("
+                    SELECT SUM(amount) as amount 
+                    FROM employees 
+                    WHERE uname = ? 
+                    AND Date BETWEEN ? AND ?
+                ");
+                $stmt->bind_param("sss", $_SESSION["username"], $startDate, $endDate);
+            }
+
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $row = $result->fetch_assoc();
+
+            if ($row) {
+                echo "" . ($row['amount'] ?? 0);
+            } else {
+                echo "No data found.";
+            }
+
+            // Debugging: Check SQL errors
+            if (!$stmt) {
+                echo "SQL Error: " . mysqli_error($link);
+            }
+
 ?>"/> </a>       
 </p>
                     <?php
