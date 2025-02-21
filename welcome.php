@@ -143,13 +143,14 @@ break;
             // Check if today is after the 20th of the month
             if ($currentDate->format('d') > 20) {
                 // Shift to the 21st of the current month
-                $startDate = $currentDate->modify('first day of this month')->modify('+20 days')->format('Y-m-d');
-                $endDate = $currentDate->modify('first day of next month')->modify('+19 days')->format('Y-m-d');
+                $startDate = (clone $currentDate)->modify('first day of this month')->modify('+20 days')->format('Y-m-d');
+                $endDate = (clone $currentDate)->modify('first day of next month')->modify('+19 days')->format('Y-m-d');
             } else {
                 // Shift to the 21st of the previous month
-                $startDate = $currentDate->modify('first day of last month')->modify('+20 days')->format('Y-m-d');
-                $endDate = $currentDate->modify('first day of this month')->modify('+19 days')->format('Y-m-d');
+                $startDate = (clone $currentDate)->modify('first day of last month')->modify('+20 days')->format('Y-m-d');
+                $endDate = (clone $currentDate)->modify('first day of this month')->modify('+19 days')->format('Y-m-d');
             }
+            
 
             // Debugging: Print calculated date range
             //echo "Start Date: $startDate, End Date: $endDate";
